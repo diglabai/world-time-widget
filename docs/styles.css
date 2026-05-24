@@ -1,0 +1,149 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f141a;
+  --panel: #151b22;
+  --text: #f5f7fb;
+  --muted: #aeb8c5;
+  --line: #29313b;
+  --blue: #54c7ec;
+  --gold: #f0b35a;
+  --green: #7ee787;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.hero {
+  min-height: 78vh;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 64px;
+  padding: 72px 0 44px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+h1 {
+  margin: 0;
+  max-width: 620px;
+  font-size: clamp(40px, 7vw, 72px);
+  line-height: 0.95;
+}
+
+.lede {
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 20px;
+  margin: 22px 0 30px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #071116;
+}
+
+.secondary {
+  background: var(--panel);
+}
+
+.hero img {
+  width: min(360px, 38vw);
+  height: auto;
+  border: 1px solid var(--line);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 32px 0;
+}
+
+article {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 20px;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+article p,
+.install p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.install {
+  padding: 12px 0 64px;
+}
+
+pre {
+  overflow-x: auto;
+  background: #080b0f;
+  border: 1px solid var(--line);
+  padding: 16px;
+}
+
+code {
+  color: var(--green);
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-top: 48px;
+  }
+
+  .hero img {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
