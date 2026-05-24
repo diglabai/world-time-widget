@@ -2,7 +2,7 @@
 
 A compact Windows desktop widget for tracking multiple time zones at a glance.
 
-It starts with USA, Morocco, and China clocks, and includes settings so you can add any country, city, or time zone supported by Windows.
+It starts with USA Eastern, USA PST, Morocco, and China clocks, and includes settings so you can add any country, city, or time zone supported by Windows.
 
 ![World Time Widget screenshot](docs/world-time-widget-screenshot.png)
 
@@ -47,6 +47,13 @@ Open settings with `S`, then:
 5. Click `Save`.
 
 The clock list is saved locally at `%LOCALAPPDATA%\CodexWorldTimeWidget\clocks.tsv`.
+
+## Included Windows Time Zones
+
+- `Eastern Standard Time` for New York / Eastern Time
+- `Pacific Standard Time` for Los Angeles / PST and PDT
+- `Morocco Standard Time` for Casablanca
+- `China Standard Time` for Beijing
 
 ## Uninstall
 

@@ -71,7 +71,7 @@ foreach ($shortcutPath in $shortcutTargets) {
     $shortcut.TargetPath = $installedExe
     $shortcut.Arguments = ''
     $shortcut.WorkingDirectory = $installDir
-    $shortcut.Description = 'Shows USA, Morocco, and China time.'
+    $shortcut.Description = 'Shows USA Eastern, USA PST, Morocco, and China time.'
     $shortcut.Save()
 }
 
@@ -84,6 +84,7 @@ Start-Process -FilePath $installedExe -WorkingDirectory $installDir
     DesktopShortcut = (Join-Path $desktopDir "$displayName.lnk")
     StartsWithWindows = $true
     UsaTimeZone = 'New York / Eastern Time'
+    UsaPstTimeZone = 'Los Angeles / Pacific Standard Time'
     MoroccoTimeZone = 'Casablanca'
     ChinaTimeZone = 'Beijing'
 }

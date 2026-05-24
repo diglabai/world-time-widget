@@ -30,6 +30,8 @@ internal static class Program
 
 internal sealed class WorldTimeForm : Form
 {
+    private const string PacificTimeZoneId = "Pacific Standard Time";
+    private const string PacificClockMigrationId = "add-usa-pacific-clock-v1";
     private const int CornerRadius = 18;
     private const int CompactWidth = 268;
     private const int ExpandedWidth = 340;
@@ -508,6 +510,11 @@ internal sealed class WorldTimeForm : Form
         {
             configs = DefaultClockConfigs();
             SaveClockConfigs(configs);
+            MarkMigrationApplied(PacificClockMigrationId);
+        }
+        else if (EnsurePacificClock(configs))
+        {
+            SaveClockConfigs(configs);
         }
 
         return configs;
@@ -542,9 +549,82 @@ internal sealed class WorldTimeForm : Form
     {
         List<ClockConfig> defaults = new List<ClockConfig>();
         defaults.Add(new ClockConfig("USA", "New York", "Eastern Standard Time", Color.FromArgb(84, 199, 236).ToArgb()));
+        defaults.Add(CreatePacificClockConfig());
         defaults.Add(new ClockConfig("Morocco", "Casablanca", "Morocco Standard Time", Color.FromArgb(240, 179, 90).ToArgb()));
         defaults.Add(new ClockConfig("China", "Beijing", "China Standard Time", Color.FromArgb(126, 231, 135).ToArgb()));
         return defaults;
+    }
+
+    private static ClockConfig CreatePacificClockConfig()
+    {
+        return new ClockConfig("USA PST", "Los Angeles", PacificTimeZoneId, Color.FromArgb(184, 144, 255).ToArgb());
+    }
+
+    private static bool EnsurePacificClock(List<ClockConfig> configs)
+    {
+        if (HasAppliedMigration(PacificClockMigrationId))
+        {
+            return false;
+        }
+
+        if (HasClockTimeZone(configs, PacificTimeZoneId))
+        {
+            MarkMigrationApplied(PacificClockMigrationId);
+            return false;
+        }
+
+        if (!IsValidTimeZone(PacificTimeZoneId))
+        {
+            return false;
+        }
+
+        configs.Add(CreatePacificClockConfig());
+        MarkMigrationApplied(PacificClockMigrationId);
+        return true;
+    }
+
+    private static bool HasClockTimeZone(List<ClockConfig> configs, string timeZoneId)
+    {
+        foreach (ClockConfig config in configs)
+        {
+            if (string.Equals(config.TimeZoneId, timeZoneId, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasAppliedMigration(string migrationId)
+    {
+        string path = MigrationsPath;
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+
+        string[] lines = File.ReadAllLines(path);
+        foreach (string line in lines)
+        {
+            if (string.Equals(line.Trim(), migrationId, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void MarkMigrationApplied(string migrationId)
+    {
+        if (HasAppliedMigration(migrationId))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(AppFolder);
+        File.AppendAllLines(MigrationsPath, new[] { migrationId });
     }
 
     internal static int PaletteColor(int index)
@@ -583,6 +663,14 @@ internal sealed class WorldTimeForm : Form
         get
         {
             return Path.Combine(AppFolder, "clocks.tsv");
+        }
+    }
+
+    private static string MigrationsPath
+    {
+        get
+        {
+            return Path.Combine(AppFolder, "migrations.txt");
         }
     }
 }
@@ -1036,6 +1124,8 @@ internal sealed class ClockConfig
 
 internal sealed class TimeZoneChoice
 {
+    private const string PacificTimeZoneId = "Pacific Standard Time";
+
     public TimeZoneChoice(TimeZoneInfo timeZone)
     {
         Id = timeZone.Id;
@@ -1047,7 +1137,20 @@ internal sealed class TimeZoneChoice
 
     public override string ToString()
     {
-        return DisplayName + " | " + Id;
+        return DisplayName + " | " + Id + AliasSuffix;
+    }
+
+    private string AliasSuffix
+    {
+        get
+        {
+            if (string.Equals(Id, PacificTimeZoneId, StringComparison.OrdinalIgnoreCase))
+            {
+                return " | PST / PDT";
+            }
+
+            return string.Empty;
+        }
     }
 
     public static List<TimeZoneChoice> GetChoices()
